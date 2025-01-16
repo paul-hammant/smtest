@@ -5,9 +5,10 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class TestHttpClient {
+public class TestHttpClient implements HttpClientService {
 
-    public static void main(String[] args) {
+    @Override
+    public boolean fetchAndValidateResponse() {
         try {
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
@@ -17,13 +18,10 @@ public class TestHttpClient {
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            if (response.body().startsWith("{")) {
-                System.out.println("Response body starts with '{'");
-            } else {
-                System.out.println("Response body does not start with '{'");
-            }
+            return response.body().startsWith("{");
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 }
