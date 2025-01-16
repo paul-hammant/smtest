@@ -4,6 +4,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.net.URLPermission;
 import java.security.CodeSource;
 import java.security.PermissionCollection;
 import java.security.Permissions;
@@ -26,6 +27,7 @@ public class ReflectiveHttpClientCaller {
         URL[] urls = {jarFile.toURI().toURL()};
 
         PermissionCollection permissions = new Permissions();
+        permissions.add(new URLPermission("https://httpbin.org/get", "GET:Accept"));
 
         URLClassLoader classLoader = new URLClassLoader(urls) {
             @Override
