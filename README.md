@@ -26,3 +26,17 @@ To build and run the project, follow these steps:
    ```
 
    This will run the `ReflectiveHttpClientCaller` class, which attempts to load the `TestHttpClient` class from the `test` module using reflection and prints the result of the `fetchAndValidateResponse` method.
+
+## Run with Security Policy
+
+Alternatively, you can run the `ReflectiveHttpClientCaller` class with a restrictive security policy using the provided shell script. This assumes that you have already built the project with `mvn install`.
+
+1. **Run the Shell Script**
+
+   From the root directory of the project, execute the following command:
+
+   ```bash
+   ./run_with_policy.sh
+   ```
+
+   This script runs the `ReflectiveHttpClientCaller` class under a security manager with a policy that restricts permissions, except for the permissions explicitly granted in the `security.policy` file.
