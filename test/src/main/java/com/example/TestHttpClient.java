@@ -5,9 +5,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class TestHttpClient implements HttpClientService {
+public class TestHttpClient {
 
-    @Override
     public boolean fetchAndValidateResponse() {
         try {
             HttpClient client = HttpClient.newHttpClient();
