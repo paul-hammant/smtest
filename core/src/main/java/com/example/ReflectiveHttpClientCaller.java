@@ -9,7 +9,15 @@ public class ReflectiveHttpClientCaller {
 
     public static void main(String[] args) {
         try {
-            // Path to the test module's JAR file
+            // Attempt to load TestHttpClient class without URLClassLoader
+            try {
+                Class.forName("com.example.TestHttpClient");
+                System.out.println("TestHttpClient is in the classpath.");
+            } catch (ClassNotFoundException e) {
+                System.out.println("TestHttpClient is NOT in the classpath.");
+            }
+
+            // Proceed with URLClassLoader
             File jarFile = new File("test/target/test-1.0-SNAPSHOT.jar");
             URL[] urls = {jarFile.toURI().toURL()};
             URLClassLoader classLoader = new URLClassLoader(urls);
