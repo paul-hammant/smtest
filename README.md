@@ -18,15 +18,10 @@ To build and run the project, follow these steps:
 
 2. **Run the Core Module**
 
-   After building the project, navigate to the `core` module directory:
+   After building the project, navigate to the `core` module directory, and exec the main class
 
    ```bash
    cd core/
-   ```
-
-   Then, execute the main method of the `ReflectiveHttpClientCaller` class using the Maven Exec Plugin:
-
-   ```bash
    mvn exec:java
    ```
 
