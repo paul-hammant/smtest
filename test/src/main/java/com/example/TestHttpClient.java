@@ -16,6 +16,7 @@ public class TestHttpClient {
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println(">> " + response.body());
 
             return response.body().startsWith("{");
         } catch (Exception e) {

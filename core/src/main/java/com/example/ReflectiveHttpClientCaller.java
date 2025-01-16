@@ -23,7 +23,7 @@ public class ReflectiveHttpClientCaller {
         }
 
         // Proceed with URLClassLoader
-        File jarFile = new File("../test/target/test-1.0-SNAPSHOT.jar");
+        File jarFile = new File("test/target/test-1.0-SNAPSHOT.jar");
         URL[] urls = {jarFile.toURI().toURL()};
 
         PermissionCollection permissions = new Permissions();
