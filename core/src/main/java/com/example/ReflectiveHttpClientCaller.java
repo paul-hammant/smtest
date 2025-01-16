@@ -4,6 +4,9 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.CodeSource;
+import java.security.PermissionCollection;
+import java.security.Permissions;
 
 public class ReflectiveHttpClientCaller {
 
@@ -21,7 +24,15 @@ public class ReflectiveHttpClientCaller {
         // Proceed with URLClassLoader
         File jarFile = new File("../test/target/test-1.0-SNAPSHOT.jar");
         URL[] urls = {jarFile.toURI().toURL()};
-        URLClassLoader classLoader = new URLClassLoader(urls);
+
+        PermissionCollection permissions = new Permissions();
+
+        URLClassLoader classLoader = new URLClassLoader(urls) {
+            @Override
+            protected PermissionCollection getPermissions(CodeSource codesource) {
+                return super.getPermissions(codesource);
+            }
+        };
 
         // Load the TestHttpClient class
         Class<?> testHttpClientClass = classLoader.loadClass("com.example.TestHttpClient");
