@@ -33,10 +33,10 @@ public class ReflectiveHttpClientCaller {
 
 
         if (args.length > 0 && args[0].equals("--WithGetAccessPermissionGrantInJava")) {
-            System.out.println("Explicit GRANTING of `new URLPermission(\"https://httpbin.org/get\", \"GET:Accept\")` in Java");
+            System.out.println("Explicit GRANTING of `new URLPermission(\"https://httpbin.org/get\", \"GET:Accept\")` in Java, because of --WithGetAccessPermissionGrantInJava option");
             permissions.add(new URLPermission("https://httpbin.org/get", "GET:Accept"));
         } else {
-            System.out.println("NO explicit GRANTING permissions in Java, See README.md");
+            System.out.println("NO explicit GRANTING permissions in Java withough --WithGetAccessPermissionGrantInJava option, See README.md");
 
         }
 
