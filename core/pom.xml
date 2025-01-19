@@ -9,12 +9,6 @@
     </parent>
     <artifactId>core</artifactId>
     <dependencies>
-        <dependency>
-            <groupId>com.example</groupId>
-            <artifactId>test</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
     <build>
         <plugins>

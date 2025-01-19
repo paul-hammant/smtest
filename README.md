@@ -26,7 +26,7 @@ Output should be:
 
 ```
 TestHttpClient is NOT in ordinarily the base classpath, good.
-NO explicit GRANTING permissions in Java, See README.md
+NO explicit GRANTING permissions in Java withough --WithGetAccessPermissionGrantInJava option, See README.md
 Setup complete, now testing reflection-based invocation of TestHttpClient.fetchAndValidateResponse()....
 Class that was dynamically loaded from a child classloader was able to go to HttpBin.org and get a JSON response
 ```
@@ -45,7 +45,7 @@ Output should be:
 WARNING: A command line option has enabled the Security Manager
 WARNING: The Security Manager is deprecated and will be removed in a future release
 TestHttpClient is NOT in ordinarily the base classpath, good.
-Explicit GRANTING of `new URLPermission("https://httpbin.org/get", "GET:Accept")` in Java
+Explicit GRANTING of `new URLPermission("https://httpbin.org/get", "GET:Accept")` in Java, because of --WithGetAccessPermissionGrantInJava option
 Setup complete, now testing reflection-based invocation of TestHttpClient.fetchAndValidateResponse()....
 Class that was dynamically loaded from a child classloader was able to go to HttpBin.org and get a JSON response
 ```
