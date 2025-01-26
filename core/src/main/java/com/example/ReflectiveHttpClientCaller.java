@@ -4,25 +4,23 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.net.URLPermission;
+import java.net.*;
 import java.security.CodeSource;
 import java.security.PermissionCollection;
 import java.security.Permissions;
 
 public class ReflectiveHttpClientCaller {
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException,
+            InstantiationException, IllegalAccessException {
 
         // Attempt to load TestHttpClient class without URLClassLoader
         try {
             Class.forName("com.example.TestHttpClient");
-            System.err.println("TestHttpClient is in the classpath - oops ");
+            System.err.println("Test: TestHttpClient is in the classpath - oops ");
             System.exit(10);
         } catch (ClassNotFoundException e) {
-            System.out.println("TestHttpClient is NOT in ordinarily the base classpath, good.");
+            System.out.println("Test: TestHttpClient is NOT in ordinarily the base classpath, good.");
         }
 
         // Proceed with URLClassLoader
@@ -31,12 +29,14 @@ public class ReflectiveHttpClientCaller {
 
         PermissionCollection permissions = new Permissions();
 
-
         if (args.length > 0 && args[0].equals("--WithGetAccessPermissionGrantInJava")) {
-            System.out.println("Explicit GRANTING of `new URLPermission(\"https://httpbin.org/get\", \"GET:Accept\")` in Java, because of --WithGetAccessPermissionGrantInJava option");
+            System.out.println("Test: Explicit GRANTING of permissions in Java, because of --WithGetAccessPermissionGrantInJava " +
+                    "command line option");
             permissions.add(new URLPermission("https://httpbin.org/get", "GET:Accept"));
+            permissions.add(new SocketPermission("httpbin.org", "resolve"));
         } else {
-            System.out.println("NO explicit GRANTING permissions in Java withough --WithGetAccessPermissionGrantInJava option, See README.md");
+            System.out.println("Test: NO explicit GRANTING permissions in Java without --WithGetAccessPermissionGrantInJava " +
+                    "command line option, See README.md");
 
         }
 
@@ -53,28 +53,14 @@ public class ReflectiveHttpClientCaller {
         // Create an instance of TestHttpClient
         Object testHttpClientInstance = testHttpClientClass.getDeclaredConstructor().newInstance();
 
-        System.out.println("Setup complete, now testing reflection-based invocation of TestHttpClient.fetchAndValidateResponse()....");
+        System.out.println("\nTest: Setup complete; parent classload has a few explicit permissions courtesy of `security.policy` " +
+                "file in repo; now testing reflection-based invocation of TestHttpClient.fetchAndValidateResponse() in a child " +
+                "classloader who's jar is not mentioned in the same `security.policy` file in repo ....\n");
 
 
         // Invoke the method and print the result
-        try {
-            // Get the fetchAndValidateResponse method
-            Method method = testHttpClientClass.getMethod("fetchAndValidateResponse");
-            boolean result = (boolean) method.invoke(testHttpClientInstance);
-            if (result) {
-                System.out.println("Class that was dynamically loaded from a child classloader was able to go to HttpBin.org and get a JSON response");
-            } else {
-                System.out.println("Not JSON???");
-            }
-        } catch (InvocationTargetException ite) {
-
-            if (ite.getCause() instanceof java.lang.SecurityException
-                    && ite.getCause().getMessage().equals("access denied (\"java.net.URLPermission\" \"https://httpbin.org/get\" \"GET:Accept\")")) {
-                System.out.println("Class that was dynamically loaded from a child classloader was NOT able to go to HttpBin.org and get a JSON response. ");
-            } else {
-                System.out.println("some unexpected ITE? " + ite.getCause().getMessage());
-            }
-        }
+        String result = (String) testHttpClientClass.getMethod("fetchAndValidateResponse").invoke(testHttpClientInstance);
+        System.out.println("Test: Class that was dynamically loaded from a child classloader, on a reflection-invcation of a permission-needing method (get string from httpbin.org/get) encountered: " + result);
 
         classLoader.close();
     }
