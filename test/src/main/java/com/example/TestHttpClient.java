@@ -31,6 +31,6 @@ public class TestHttpClient {
                 "  \"headers\": {\n" +
                 "    \"Accept\": \"application/json\", \n" +
                 "    \"Host\": \"httpbin.org\", \n" +
-                "    \"User-Agent\": \"Java-http-client") ? "JSON-as-expected": "Not the expected JSON : " + body;
+                "    \"User-Agent\": \"Java-http-client") ? "JSON as expected": "Not the expected JSON : " + body;
     }
 }
