@@ -6,6 +6,8 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 
 public class TestHttpClient {
 

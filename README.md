@@ -14,12 +14,12 @@ First, navigate to the root directory of the project and run the following comma
 mvn install
 ```
 
-This command will compile the source code, and package the modules into JAR files.
+This command will compile the source code, and package the modules into JAR files in their respective target/ folders
 
 ## Default run with a "no security manager & policy" situation (the default for Java)
 
 ```bash
-./run.sh
+./run_with_no_policy.sh
  ```
 
 Output should be:
@@ -31,44 +31,33 @@ Setup complete, now testing reflection-based invocation of TestHttpClient.fetchA
 Class that was dynamically loaded from a child classloader was able to go to HttpBin.org and get a JSON response
 ```
 
-## Run with Security Policy and Java granting of privileges
-
-Execute the following command:
+## Permutations to run
 
 ```bash
-./run_with_policy.sh --WithGetAccessPermissionGrantInJava
+./run_with_no_policy.sh 
+./run_with_specific_policy.sh --WithGetAccessPermissionGrantInJava
+./run_with_specific_policy.sh 
+./run_with_all_policy.sh --WithGetAccessPermissionGrantInJava
+./run_with_all_policy.sh 
 ```
 
-Output should be:   
+Among other output lines, the crucial one is:
 
 ``` 
-WARNING: A command line option has enabled the Security Manager
-WARNING: The Security Manager is deprecated and will be removed in a future release
-TestHttpClient is NOT in ordinarily the base classpath, good.
-Explicit GRANTING of `new URLPermission("https://httpbin.org/get", "GET:Accept")` in Java, because of --WithGetAccessPermissionGrantInJava option
-Setup complete, now testing reflection-based invocation of TestHttpClient.fetchAndValidateResponse()....
-Class that was dynamically loaded from a child classloader was able to go to HttpBin.org and get a JSON response
+Test: Class that was dynamically loaded from a child classloader, on a reflection-invcation of a permission-needing method (get string from httpbin.org/get) encountered: JSON as expected
+
+// or
+
+Test: Class that was dynamically loaded from a child classloader, on a reflection-invcation of a permission-needing method (get string from httpbin.org/get) encountered: Security Exception, msg: access denied ("java.net.URLPermission" "https://httpbin.org/get" "GET:Accept")
 ```
 
-The same output as before, with two Warnings from the JDK itself
-
-## Run with Security Policy with no granting of privileges in Java
-
-Execute the following command:
-   
-```bash   
-./run_with_policy.sh
-```
-
-Output should be:
+Status (gets JSON or has Security Exception):
 
 ```
-WARNING: A command line option has enabled the Security Manager
-WARNING: The Security Manager is deprecated and will be removed in a future release
-TestHttpClient is NOT in ordinarily the classpath, good.
-NOT GRANTING permissions in Java, re-run with --WithGetAccessPermissionGrantInJava as arg to shell script
-etup complete, now testing reflection-based invocation of TestHttpClient.fetchAndValidateResponse()....
-Class that was dynamically loaded from a child classloader was NOT able to go to HttpBin.org and get a JSON response. 
+JSON as expected: ./run_with_no_policy.sh 
+Security Exception as expected: ./run_with_specific_policy.sh 
+Unexpected Security Exception: ./run_with_specific_policy.sh --WithGetAccessPermissionGrantInJava
+Security Exception as expected: ./run_with_all_policy.sh 
+JSON as expected: ./run_with_all_policy.sh --WithGetAccessPermissionGrantInJava
 ```
 
-For that, java.lang.SecurityException was caught, and the "Not able to..." message printed out
